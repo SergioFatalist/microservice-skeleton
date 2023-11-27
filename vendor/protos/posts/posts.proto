@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+package posts;
+
+import "google/protobuf/empty.proto";
+
+service PostsService {
+  rpc SearchPost (SearchPostRequest) returns (Post) {};
+  rpc ListPosts (ListPostsRequest) returns (ListPostsResponse) {};
+  rpc CreatePost (CreatePostRequest) returns (Post) {};
+}
+
+message Post {
+  int32 id = 1;
+  Author author = 2;
+  Category category = 3;
+  string header = 4;
+  string content = 5;
+}
+
+message Author {
+  int32 id = 1;
+  string name = 2;
+  string email = 3;
+}
+
+message Category {
+  int32 id = 1;
+  string name = 2;
+  optional string description = 3;
+}
+
+message PaginationRequest {
+  int32 limit = 1;
+  optional uint32 page = 2;
+}
+
+message PaginationResponse {
+  uint32 pages = 1;
+  uint32 total = 2;
+}
+
+message SearchPostRequest {
+  optional int32 id = 1;
+  optional string header = 2;
+  optional string content = 3;
+}
+
+
+message ListPostsFilter {
+  optional int32 category_id = 1;
+  optional int32 author_id = 2;
+}
+
+message ListPostsRequest {
+  optional PaginationRequest pagination = 1;
+  optional ListPostsFilter filter = 2;
+}
+
+message ListPostsResponse {
+  optional PaginationResponse pagination = 1;
+  repeated Post posts = 2;
+}
+
+message CreatePostRequest {
+  int32 category_id = 1;
+  int32 author_id = 2;
+  string header = 4;
+  string content = 5;
+}

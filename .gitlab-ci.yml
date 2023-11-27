@@ -1,0 +1,4 @@
+include:
+  - project: 'project with GitLab AutoDevOps YAML'
+    file: 'AutoDevOps YAML.yml'
+    ref: 'AutoDevOps YAML branch'

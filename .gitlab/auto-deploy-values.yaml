@@ -1,0 +1,42 @@
+# example values.yaml for deployment via Helm
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+              - key: "app"
+                operator: In
+                values:
+                  - postsservice
+          topologyKey: "kubernetes.io/hostname"
+
+ingress:
+  enabled: true
+  path: "/posts.PostsService"
+  tls:
+    enabled: true
+    acme: false
+    useDefaultSecret: false
+  annotations:
+    kubernetes.io/ingress.class: contour
+    ingress.kubernetes.io/force-ssl-redirect: "true"
+
+service:
+  name: postsservice
+  annotations:
+    projectcontour.io/upstream-protocol.h2c: "8080"
+  internalPort: 8080
+  externalPort: 8080
+
+readinessProbe:
+  probeType: "tcpSocket"
+  port: 8080
+  initialDelaySeconds: 15
+  timeoutSeconds: 15
+
+livenessProbe:
+  probeType: "tcpSocket"
+  port: 8080
+  initialDelaySeconds: 5

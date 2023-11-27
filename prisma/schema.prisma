@@ -1,0 +1,42 @@
+datasource db {
+  provider          = "postgresql"
+  url               = env("DB_URL")
+  shadowDatabaseUrl = env("SH_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Post {
+  id         Int      @id @default(autoincrement())
+  createdAt  Int      @default(dbgenerated("EXTRACT(epoch FROM NOW())")) @map("created_at")
+  author     Author   @relation(fields: [authorId], references: [id])
+  authorId   Int      @map("author_id")
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId Int      @map("category_id")
+  header     String   @db.VarChar()
+  content    String   @db.Text()
+
+  @@index([authorId, categoryId, header, content])
+  @@map("posts")
+}
+
+model Category {
+  id          Int     @id @default(autoincrement())
+  name        String  @db.VarChar()
+  description String? @db.VarChar()
+  posts       Post[]
+
+  @@map("categories")
+}
+
+model Author {
+  id    Int    @id @default(autoincrement())
+  name  String @db.VarChar()
+  email String @unique() @db.VarChar()
+
+  posts Post[]
+
+  @@map("authors")
+}

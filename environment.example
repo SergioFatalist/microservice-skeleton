@@ -1,0 +1,2 @@
+DB_URL=postgresql://user:password@localhost:5432/work_database
+SH_URL=postgresql://user:password@localhost:5432/shadow_database
